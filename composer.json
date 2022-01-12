@@ -1,6 +1,6 @@
 {
     "name": "bagisto/bagisto-image-gallery",
-    "description": "Allows the sendcloud shipping.",
+    "description": "Allows the admin to add/manage images into various galleries.",
     "keywords": [
         "bagisto",
         "image",
