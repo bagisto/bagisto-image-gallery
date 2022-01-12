@@ -1,0 +1,239 @@
+
+* {box-sizing: border-box;}
+body {font-family: Verdana, sans-serif;}
+
+.imagegallery
+{
+    width: 100%;
+    height: 100px;
+}
+.imagegalleries
+{
+    width: 100%;
+    height: 200px;
+}
+.imagediv{
+    border: 5px ridge;
+}
+
+.imagetitle{
+    text-align: center;
+    margin-top: 10px;
+}
+
+.imagespan {
+  width: 20%;
+height: 250px;
+  margin: 10px;
+  float: left;
+}
+.homelink{
+    display: inline;
+    
+}
+h3{
+    display: inline;
+    margin: 20px;
+}
+.heading{
+    margin: 20px;
+    font-size: 4vw;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 80px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: white; 
+    margin: auto;
+    
+    border: 1px solid #888;
+    width: 95%;
+    height: 480px;
+  }
+
+  .modelimage{
+      height: 100%;
+      width: 100%;
+}
+  .w3-display-right{
+      background-color: lightgray;
+      opacity: .5;
+      margin-right: 4%;
+      font-size: 10px;
+      border-radius: 75%;
+  }
+  .w3-display-left{
+    background-color: lightgray;
+    opacity: .5;
+    margin-left: 4%;
+      font-size: 10px;
+      border-radius: 75%;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: black;
+    margin-left: 99%;
+    font-size: 30px;
+    font-weight: bold;
+    
+  top: 20px;
+  right: 0;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+
+  }
+  .model-header{
+      color: #000;
+      font-weight: bold;
+      position: absolute;
+      font-size: 20px;          
+  }
+  .model-header.No{
+      display: none;
+  }
+  .model-header.Outside.Bottom{
+    bottom: -25px;
+}
+.model-header.Inside.Bottom{
+    bottom: -25px;
+}
+.model-header.Top.Inside{
+    left: 0;
+    top: 0;
+  }
+  .model-header.Top.Outside{
+    top:-25px;
+  }
+  .model-header.Bottom.Float{
+    bottom: 0;
+    left: 50%;
+}
+.model-header.Bottom.Over{
+    bottom: 0;
+    left: 0;
+}
+.modelimage.Yes{
+    border: 10px solid white;
+}
+
+.imgcontroller{
+position: absolute;
+left: 46%;
+}
+.imgcontroller.No{
+    display: none;
+}
+.iconstyle{
+    width: 20px;
+    height: 100%;
+    background-color: black;
+    color: white;
+}
+  .Fade{
+      position:relative;
+      animation:animateright 0.8s
+  }
+
+    @keyframes animateright
+    {
+    from{
+        right:0;opacity:0
+        } to{
+            right:0;opacity:1
+            }
+    }
+.Elastic{
+    position:relative;
+      animation:animateela 0.8s
+  }
+
+    @keyframes animateela
+    {
+    from{
+        right:-300px;opacity:0
+    } to{
+        right:0;opacity:1}
+    }    
+
+
+
+    
+.mySlide {display: none}
+img {vertical-align: middle;}
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -22px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
+
+/* Fading animation */
+.fades {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+  .prev, .next,.text {font-size: 11px}
+}

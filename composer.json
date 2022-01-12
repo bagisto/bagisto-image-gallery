@@ -1,0 +1,33 @@
+{
+    "name": "bagisto/bagisto-image-gallery",
+    "description": "Allows the sendcloud shipping.",
+    "keywords": [
+        "bagisto",
+        "image",
+        "image-gallery"
+    ],
+    "homepage": "https://github.com/bagisto/bagisto-image-gallery",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bagisto"
+        }
+    ],
+    "require": {
+        "konekt/concord": "1.2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webkul\\ImageGallery\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Webkul\\ImageGallery\\Providers\\ImageGalleryServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
+    "minimum-stability": "dev"
+}
