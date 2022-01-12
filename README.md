@@ -23,7 +23,7 @@ It packs in lots of demanding features that allows your business to scale in no 
 ## Installation with composer:
 - Run the following command
 ```
-composer require bagisto/bagisto-sendcloud-shipping
+composer require bagisto/bagisto-image-gallery
 ```
 
 - Goto config/concord.php file and add following line under 'modules'
