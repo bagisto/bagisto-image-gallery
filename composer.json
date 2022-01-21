@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "konekt/concord": "1.2.0"
+        "konekt/concord": "^1.2"
     },
     "autoload": {
         "psr-4": {
