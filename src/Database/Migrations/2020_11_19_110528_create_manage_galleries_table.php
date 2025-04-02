@@ -18,8 +18,7 @@ class CreateManageGalleriesTable extends Migration
             $table->string('gallery_title')->unique();
             $table->string('gallery_code')->unique();
             $table->string('image_ids')->nullable();
-            $table->integer('thumbnail_image_id')->unsigned()->nullable();
-            $table->foreign('thumbnail_image_id', 'fk_270_image__gallery_thumbnail_image_id_manage__gallery')->references('id')->on('image_galleries');
+            $table->integer('thumbnail_image_id')->nullable();
             $table->boolean('status')->default(0);
             $table->timestamps();
         });

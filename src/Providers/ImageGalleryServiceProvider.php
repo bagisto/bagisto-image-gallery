@@ -2,8 +2,11 @@
 
 namespace Webkul\ImageGallery\Providers;
 
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Event;
+use Webkul\ImageGallery\Http\Middleware\ImageGallery;
 
 class ImageGalleryServiceProvider extends ServiceProvider
 {
@@ -12,32 +15,43 @@ class ImageGalleryServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(Router $router)
     {
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
-        $this->loadRoutesFrom(__DIR__ . '/../Http/admin-routes.php');
+        $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'image-gallery');
 
-        $this->loadRoutesFrom(__DIR__ . '/../Http/shop-routes.php');
+        $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'image-gallery');
 
-        $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'imagegallery');
+        $this->app->register(ModuleServiceProvider::class);
 
-        $this->publishes([
-            __DIR__ . '/../../publishable/assets' => public_path('themes/default/assets'),
-        ], 'public');
-
-        $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'imagegallery');
-
-        Event::listen('bagisto.admin.layout.head', function($viewRenderEventManager) {
-            $viewRenderEventManager->addTemplate('imagegallery::admin.layouts.style');
-        });
-
-        Event::listen('bagisto.shop.home.content.before', function($viewRenderEventManager) {
-            $viewRenderEventManager->addTemplate('imagegallery::shop.home.imagecontains');
-        });
-
+        $this->app->register(EventServiceProvider::class);
         
+        $router->aliasMiddleware('imageGallery', ImageGallery::class);
 
+        Blade::anonymousComponentPath(__DIR__ . '/../Resources/views/components', 'image-gallery');
+
+        Route::middleware('web')->group(__DIR__ . '/../Routes/admin-routes.php');
+
+        Route::middleware('web')->group(__DIR__ . '/../Routes/shop-routes.php');
+
+        if (core()->getConfigData('image.setting.image-options.status')) {
+            $this->mergeConfigFrom(
+                dirname(__DIR__) . '/Config/admin-menu.php', 'menu.admin'
+            );    
+        }
+
+        /* Breadcrumbs */
+        require __DIR__ . '/../Routes/breadcrumbs.php';
+
+        // Publish Assets
+        $this->publishAssets();
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Webkul\ImageGallery\Console\Commands\ImageGalleryCommand::class,
+            ]);
+        }
     }
 
     /**
@@ -58,15 +72,28 @@ class ImageGalleryServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->mergeConfigFrom(
-            dirname(__DIR__) . '/Config/admin-menu.php', 'menu.admin'
-        );
-
-        $this->mergeConfigFrom(
             dirname(__DIR__) . '/Config/acl.php', 'acl'
         );
 
         $this->mergeConfigFrom(
             dirname(__DIR__) . '/Config/system.php', 'core'
         );
+
+        $this->mergeConfigFrom(
+            dirname(__DIR__).'/Config/bagisto-vite.php',
+            'bagisto-vite.viters'
+        );
+    }
+
+    /**
+     * Publish the assets.
+     *
+     * @return void
+     */
+    protected function publishAssets()
+    {
+        $this->publishes([
+            __DIR__ .'/../../publishable' => public_path('themes/image-gallery')
+        ], 'public');
     }
 }

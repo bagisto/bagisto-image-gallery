@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (min-width: 1024px) {
+    .lg\:hidden {
+        display: none !important;
+    }
+}
+
+@media not all and (min-width: 1024px) {
+    .max-lg\:hidden {
+        display: none !important;
+    }
+}
+
+@media not all and (min-width: 1024px) {
+    .max-lg\:px-\[30px\] {
+        padding-left: 30px !important;
+        padding-right: 30px !important;
+    }
+}
+
+@media (min-width: 1180px) {
+    .\31 180\:hidden {
+        display: none !important;
+    }
+}

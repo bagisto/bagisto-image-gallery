@@ -1,24 +1,17 @@
 {
-    "name": "bagisto/bagisto-image-gallery",
-    "description": "Allows the admin to add/manage images into various galleries.",
-    "keywords": [
-        "bagisto",
-        "image",
-        "image-gallery"
-    ],
-    "homepage": "https://github.com/bagisto/bagisto-image-gallery",
+    "name": "bagisto/laravel-imagegallery",
     "license": "MIT",
+    "description" : "Image Gallery package",
     "authors": [
         {
-            "name": "Bagisto"
+            "name": "Bagisto",
+            "email": "support@bagisto.com"
         }
     ],
-    "require": {
-        "konekt/concord": "^1.10.1"
-    },
+    "require": {},
     "autoload": {
         "psr-4": {
-            "Webkul\\ImageGallery\\": "src/"
+            "Webkul\\ImageGallery\\": "packages/Webkul/ImageGallery/src"
         }
     },
     "extra": {
