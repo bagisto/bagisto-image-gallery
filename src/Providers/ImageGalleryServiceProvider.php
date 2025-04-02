@@ -78,6 +78,11 @@ class ImageGalleryServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             dirname(__DIR__) . '/Config/system.php', 'core'
         );
+
+        $this->mergeConfigFrom(
+            dirname(__DIR__).'/Config/bagisto-vite.php',
+            'bagisto-vite.viters'
+        );
     }
 
     /**
