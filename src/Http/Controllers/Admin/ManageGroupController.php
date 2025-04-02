@@ -2,44 +2,27 @@
 
 namespace Webkul\ImageGallery\Http\Controllers\Admin;
 
-use Illuminate\Support\Facades\Event;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
+use Webkul\Core\Rules\Code;
+use Webkul\ImageGallery\DataGrids\ManageGalleryForGroupsDatagrid;
+use Webkul\ImageGallery\DataGrids\ManageGroupDataGrid;
+use Webkul\ImageGallery\Repositories\ImageGalleryRepository;
+use Webkul\ImageGallery\Repositories\ManageGalleryRepository;
 use Webkul\ImageGallery\Repositories\ManageGroupRepository;
-use Illuminate\Support\Facades\DB;
-
 
 class ManageGroupController extends Controller
 {
-    
-    /**
-     * Contains route related configuration
-     *
-     * @var array
-     */
-    protected $_config;
-
-    protected $manageGroupRepository;
-
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    // public function __construct()
-    // {
-    //     $this->middleware('admin');
-
-    //     $this->_config = request('_config');
-    // }
-
     public function __construct(
-        ManageGroupRepository $manageGroupRepository
-    )
-    {
-        $this->manageGroupRepository = $manageGroupRepository;
-
-        $this->_config = request('_config');
-
-        $this->middleware('admin');
+        protected ImageGalleryRepository $imageGalleryRepository, 
+        protected ManageGalleryRepository $manageGalleryRepository,
+        protected ManageGroupRepository $manageGroupRepository,
+    ) {
     }
 
     /**
@@ -47,158 +30,160 @@ class ManageGroupController extends Controller
      *
      * @return \Illuminate\View\View
      */
-
     public function index()
     {
-        return view($this->_config['view']);
+        if (request()->ajax()) {
+            return app(ManageGroupDataGrid::class)->toJson();
+        }
+
+        return view('image-gallery::admin.manage-groups.index');
     }
 
-    
+    /**
+     * Create image groups.
+     * 
+     *  @return \Illuminate\View\View
+     */
     public function create()
     {
-        $manageGroups = $this->manageGroupRepository->getCategoryTree(null, ['id']);
-        $imageGalleries = DB::table('manage_galleries')->get();
+        if (request()->ajax()) {
+            return app(ManageGalleryForGroupsDatagrid::class)->toJson();
+        }
 
-        return view($this->_config['view'], compact('manageGroups', 'imageGalleries'));
+        return view('image-gallery::admin.manage-groups.create');
     }
-
+    
+    /**
+     * Store newly created resources.
+     * 
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store()
     {
         $this->validate(request(), [
-            'group_code' => ['required', 'unique:manage_groups,group_code', new \Webkul\Core\Contracts\Validations\Code],
+            'group_code' => ['required', 'min:5', 'max:5', 'unique:manage_groups,group_code', new Code],
         ]);
 
         $data = request()->all();
 
-        if(!isset($data['extradata']))
-        {
-            $data['extradata'] = rtrim($data['extradata'], ",");
-            $data['extradata'] = explode(',', $data['extradata']);
-            $data['gallery_ids'] = $data['extradata'];
-
-            $idcounts = (array_count_values($data['gallery_ids']));
-
-            $data['gallery_ids'] =  array_unique($data['gallery_ids']);
-        
-            foreach($data['gallery_ids'] as $idcount)
-            {
-                if($idcounts[$idcount]%2==0)
-                {
-                    $key = array_search($idcount, $data['gallery_ids']);
-                    unset($data['gallery_ids'][$key]);
-
-                }
-            }
-
-        }
-        
-        if(!empty($data['gallery_ids']))
-        {
-
-        $image_ids = implode(',', $data['gallery_ids']);
-        $data['gallery_ids'] = $image_ids;
-        
+        if (! isset($data['status']) ) {
+            $data['status'] = 0;
         }
 
-        $manageGroup = $this->manageGroupRepository->create($data);
-        session()->flash('success', trans('Group Created successfully.', ['name' => 'ManageGroup']));
+        if (isset($data['gallery_ids'])) {
+            $data['gallery_ids'] = implode(',', $data['gallery_ids']);
 
-        return redirect()->route($this->_config['redirect']);
+            $data['gallery_ids'] = ltrim($data['gallery_ids'], ',');
+        }
+
+        $this->manageGroupRepository->create($data);
+
+        session()->flash('success', trans('image-gallery::app.admin.image-gallery.manage-gallery.create-success'));
+
+        return redirect()->route('admin.image-gallery.manage-groups.index');
     }
 
-
+    /**
+     * Edit create resources.
+     * 
+     * @return \Illuminate\View\View
+     */
     public function edit($id)
     {
         $category = $this->manageGroupRepository->findOrFail($id);
-
-        $categories = DB::table('manage_galleries')->get();
-
-        return view($this->_config['view'], compact('category' , 'categories'));
+        
+        return view('image-gallery::admin.manage-groups.edit')->with([
+            'category'  => $category,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-
     public function update($id)
     {
         $this->validate(request(), [
-            'group_code' => ['required', 'unique:manage_groups,group_code,' . $id, new \Webkul\Core\Contracts\Validations\Code],
+            'group_code' => ['required', 'min:5', 'max:5', 'unique:manage_groups,group_code,' . $id, new Code],
         ]);
+         
         $data = request()->all();
-        if(isset($data['extradata']))
-        {
-            
-            $data['extradata'] = explode(',', $data['extradata']);
-            
-            $data['gallery_ids'] = $data['extradata'];
-            if($data['gallery_ids'][0]=='')
-            {
-                array_shift($data['gallery_ids']);
-            }
-            
-            $idcounts = (array_count_values($data['gallery_ids']));
-
-            $data['gallery_ids'] =  array_unique($data['gallery_ids']);
-        
-            foreach($data['gallery_ids'] as $idcount)
-            {
-                if($idcounts[$idcount]%2==0)
-                {
-                    $key = array_search($idcount, $data['gallery_ids']);
-                    unset($data['gallery_ids'][$key]);
-
-                }
-            }
-            if (empty($data['gallery_ids'])) {
-                $data['gallery_ids'] = '';
-             }
+    
+        if (! isset($data['status']) ) {
+            $data['status'] = 0;
         }
-        
-        if(!empty($data['gallery_ids']))
-        {
+
+        if (request()->has('gallery_ids')) {
+            $data['gallery_ids'] = implode(',', $data['gallery_ids']);
             
-        $image_ids = implode(',', $data['gallery_ids']);
-        $data['gallery_ids'] = $image_ids;
-        
+            $data['gallery_ids'] = ltrim($data['gallery_ids'], ',');
         }
 
         $this->manageGroupRepository->update($data, $id);
 
-        session()->flash('success', 'Group updated successfully.');
+        session()->flash('success', trans('image-gallery::app.admin.image-gallery.manage-gallery.update-success'));
 
-        return redirect()->route($this->_config['redirect']);
+        return redirect()->route('admin.image-gallery.manage-groups.index');
     }
 
-    /**
+     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
-        $manageGroup = $this->manageGroupRepository->findOrFail($id);
+        try {
+            $this->manageGroupRepository->delete($id);
 
-        
-            try {
-                //Event::dispatch('catalog.category.delete.before', $id);
+            return new JsonResponse([
+                'message'=> trans('image-gallery::app.admin.image-gallery.manage-groups.delete-success')
+            ]);
+        } catch(\Exception $e) {
+            return new JsonResponse([
+                'message'=> trans('image-gallery::app.admin.image-gallery.manage-groups.delete-failed')
+            ]);
+        }
+    }
 
-                $this->manageGroupRepository->delete($id);
+    /**
+     * Remove the specified resources from database.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function massDestroy()
+    {
+        $this->manageGroupRepository->WhereIn('id', request()->input('indices'))->delete();
 
-                //Event::dispatch('catalog.category.delete.after', $id);
+        return new JsonResponse([
+            'message' => trans('image-gallery::app.admin.image-gallery.manage-groups.mass-delete-success')
+        ], 200);
+    }
 
-                session()->flash('success', 'Delete successfully');
+    /**
+     * Update the specified resources from database.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function massUpdate()
+    {
+        $manageGroupIds = request()->input('indices');
 
-                return response()->json(['message' => true], 200);
-            } catch(\Exception $e) {
-                session()->flash('error', 'failure occure during deleting group.');
+        foreach ($manageGroupIds as $manageGroupId) {
+            $manageGroup = $this->manageGroupRepository->find($manageGroupId);
+                
+            if ($manageGroup) {
+                $this->manageGroupRepository->update([
+                    'status' => request()->input('value'),
+                ], $manageGroupId);
             }
-        
+        }
 
-        return response()->json(['message' => false], 400);
+        return new JsonResponse([
+            'message' => trans('image-gallery::app.admin.image-gallery.manage-groups.mass-update-success')
+        ], 200);
     }
 }

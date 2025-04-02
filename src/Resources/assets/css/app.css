@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "icomoon";
+    src: url('../fonts/icomoon.woff?yoliq0') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+@layer components {
+    [class^="image-"], [class*=" image-"] {
+        /* use !important to prevent issues with browser extensions that change fonts */
+        font-family: 'icomoon' !important;
+        speak: never;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        color: #6b7280;
+      
+        /* Better Font Rendering =========== */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    html.dark [class^="image-"],
+    html.dark [class*=" image-"]{
+        color: #d1d5db;
+    }
+      
+    .image-gallery-icon:before {
+        content: "\e325";
+    }
+}
+
+.ltr\:pl-\[286px\]:where([dir=ltr], [dir=ltr] *) {
+    padding-left: 286px;
+}
+
+.sidebar-collapsed .group-\[\.sidebar-collapsed\]\/container\:ltr\:pl-\[85px\]:where([dir=ltr], [dir=ltr] *) {
+    padding-left: 85px !important;
+}
+
+.ltr\:pl-\[286px\]:where([dir=rtl], [dir=rtl] *) {
+    padding-right: 286px;
+}
+
+.sidebar-collapsed .group-\[\.sidebar-collapsed\]\/container\:ltr\:pl-\[85px\]:where([dir=rtl], [dir=rtl] *) {
+    padding-right: 85px !important;
+}
+
+.ltr\:pr-5:where([dir=ltr],[dir=ltr] *) {
+    padding-right: 1.25rem;
+}
+
+.ltr\:pl-3:where([dir=ltr],[dir=ltr] *) {
+    padding-left: 0.75rem;
+}
+
+.rtl\:pl-5:where([dir=rtl],[dir=rtl] *) {
+    padding-left: 1.25rem;
+}
+
+.rtl\:pr-3:where([dir=rtl],[dir=rtl] *) {
+    padding-right: 0.75rem;
+}

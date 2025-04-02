@@ -1,0 +1,33 @@
+{
+  "src/Resources/assets/css/app.css": {
+    "file": "assets/app-bc5883d6.css",
+    "isEntry": true,
+    "src": "src/Resources/assets/css/app.css"
+  },
+  "src/Resources/assets/css/shop.css": {
+    "file": "assets/shop-dd1db5af.css",
+    "isEntry": true,
+    "src": "src/Resources/assets/css/shop.css"
+  },
+  "src/Resources/assets/fonts/icomoon.woff": {
+    "file": "assets/icomoon-06f9f5e8.woff",
+    "src": "src/Resources/assets/fonts/icomoon.woff"
+  },
+  "src/Resources/assets/images/Icon-Gallary-active.svg": {
+    "file": "assets/Icon-Gallary-active-ffb40628.svg",
+    "src": "src/Resources/assets/images/Icon-Gallary-active.svg"
+  },
+  "src/Resources/assets/images/Icon-Gallary.svg": {
+    "file": "assets/Icon-Gallary-63b16270.svg",
+    "src": "src/Resources/assets/images/Icon-Gallary.svg"
+  },
+  "src/Resources/assets/images/seeders/theme/en/image-gallery.png": {
+    "file": "assets/image-gallery-c3a369fb.png",
+    "src": "src/Resources/assets/images/seeders/theme/en/image-gallery.png"
+  },
+  "src/Resources/assets/js/app.js": {
+    "file": "assets/app-4ed993c7.js",
+    "isEntry": true,
+    "src": "src/Resources/assets/js/app.js"
+  }
+}

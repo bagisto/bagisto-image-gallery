@@ -3,192 +3,147 @@
 return [
     [
         'key'  => 'image',
-        'name' => 'Image Gallery',
+        'name' => 'image-gallery::app.admin.configuration.image-gallery.title',
+        'info' => 'image-gallery::app.admin.configuration.image-gallery.info',
         'sort' => 1,
     ], [
-        'key'  => 'image.image',
-        'name' => 'Setting',
+        'key'  => 'image.setting',
+        'name' => 'image-gallery::app.admin.configuration.image-gallery.setting.title',
+        'info' => 'image-gallery::app.admin.configuration.image-gallery.setting.info',
+        'icon' => 'settings/settings.svg',
         'sort' => 1,
     ], [
-        'key'    => 'image.image.image_options',
-        'name'   => 'Gallery Setting',
+        'key'    => 'image.setting.image-options',
+        'name'   => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.gallery-setting',
+        'info'   => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.info',
         'sort'   => 1,
         'fields' => [
             [
-                'name'          => 'image_gallery_show',
-                'title'         => 'Image Gallery Visible',
-                'type'          => 'select',
-                'options'       => [
-                    [
-                        'title' => 'Enable',
-                        'value' => 1,
-                    ], [
-                        'title' => 'Disable',
-                        'value' => 0,
-                    ]
-                ],
-                'channel_based' => true
-            ],[
-                'name'          => 'opening_effect',
-                'title'         => 'Opening Effect',
-                'type'          => 'select',
-                'options'       => [
-                    [
-                        'title' => 'None',
-                        'value' => 'None',
-                    ], [
-                        'title' => 'Fade',
-                        'value' => 'Fade',
-                    ], [
-                        'title' => 'Elastic',
-                        'value' => 'Elastic',
-                    ],
-                ],
-                'channel_based' => true
+                'name'          => 'status',
+                'title'         => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.image-gallery-show.title',
+                'type'          => 'boolean',
+                'channel_based' => true,
+                'locale_based'  => true,
             ], [
-                'name'          => 'closing_effect',
-                'title'         => 'Closing Effect',
-                'type'          => 'select',
-                'options'       => [
+                'name'    => 'caption',
+                'title'   => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.caption.title',
+                'type'    => 'select',
+                'options' => [
                     [
-                        'title' => 'None',
-                        'value' => 'None',
-                    ], [
-                        'title' => 'Fade',
-                        'value' => 'Fade',
-                    ], [
-                        'title' => 'Elastic',
-                        'value' => 'Elastic',
-                    ],
-                ],
-                'channel_based' => true
-            ], [
-                'name'          => 'caption',
-                'title'         => 'Caption',
-                'type'          => 'select',
-                'options'       => [
-                    [
-                        'title' => 'Yes',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.caption.yes',
                         'value' => 'Yes',
                     ], [
-                        'title' => 'No',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.caption.no',
                         'value' => 'No',
                     ],
                 ],
-                'channel_based' => true
+                'channel_based' => true,
+                'locale_based'  => true,
             ], [
-                'name'          => 'caption_type',
-                'title'         => 'Caption Type',
-                'type'          => 'select',
-                'info'          => "'float' and 'over' works with position 'bottom'.",
-                'options'       => [
+                'name'    => 'caption-type',
+                'title'   => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.caption-type.title',
+                'type'    => 'select',
+                'info'    => "image-gallery::app.admin.configuration.image-gallery.setting.image-options.caption-type.info",
+                'options' => [
                     [
-                        'title' => 'Float',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.caption-type.float',
                         'value' => 'Float',
                     ], [
-                        'title' => 'Inside',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.caption-type.inside',
                         'value' => 'Inside',
                     ], [
-                        'title' => 'Outside',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.caption-type.outside',
                         'value' => 'Outside',
                     ], [
-                        'title' => 'Over',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.caption-type.over',
                         'value' => 'Over',
                     ],
                 ],
-                'channel_based' => true
+                'channel_based' => true,
+                'locale_based'  => true,
             ], [
-                'name'          => 'caption_position',
-                'title'         => 'Caption Position',
+                'name'          => 'caption-position',
+                'title'         => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.caption-position.title',
                 'type'          => 'select',
                 'options'       => [
                     [
-                        'title' => 'Top',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.caption-position.top',
                         'value' => 'Top',
                     ], [
-                        'title' => 'Bottom',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.caption-position.bottom',
                         'value' => 'Bottom',
                     ],
                 ],
-                'channel_based' => true
+                'channel_based' => true,
+                'locale_based'  => true,
             ], [
                 'name'          => 'background',
-                'title'         => 'Background',
+                'title'         => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.background.title',
                 'type'          => 'select',
                 'options'       => [
                     [
-                        'title' => 'Dark',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.background.dark',
                         'value' => 'Dark',
                     ], [
-                        'title' => 'Light',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.background.light',
                         'value' => 'Light',
                     ],
                 ],
-                'channel_based' => true
-            ], [
-                'name'          => 'cyclic',
-                'title'         => 'Cyclic',
-                'type'          => 'select',
-                'options'       => [
-                    [
-                        'title' => 'Yes',
-                        'value' => 'Yes',
-                    ], [
-                        'title' => 'No',
-                        'value' => 'No',
-                    ],
-                ],
-                'channel_based' => true
-            ], [
-                'name'          => 'interval',
-                'title'         => 'Interval',
-                'type'          => 'text',
-                'validation'    => 'between:500,99999',
                 'channel_based' => true,
                 'locale_based'  => true,
-                'info'          => 'Only Numeric Value',
+            ], [
+                'name'          => 'interval',
+                'title'         => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.interval.title',
+                'type'          => 'number',
+                'validation'    => 'required',
+                'info'          => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.interval.info',
+                'channel_based' => true,
+                'locale_based'  => true,
             ], [
                 'name'          => 'border',
-                'title'         => 'Border',
+                'title'         => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.border.title',
                 'type'          => 'select',
                 'options'       => [
                     [
-                        'title' => 'Yes',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.border.yes',
                         'value' => 'Yes',
                     ], [
-                        'title' => 'No',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.border.no',
                         'value' => 'No',
                     ],
                 ],
-                'channel_based' => true
+                'channel_based' => true,
+                'locale_based'  => true,
             ], [
-                'name'          => 'slidecount',
-                'title'         => 'Slidecount',
+                'name'          => 'slide-count',
+                'title'         => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.slide-count.title',
                 'type'          => 'select',
                 'options'       => [
                     [
-                        'title' => 'Yes',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.slide-count.yes',
                         'value' => 'Yes',
                     ], [
-                        'title' => 'No',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.slide-count.no',
                         'value' => 'No',
                     ],
                 ],
-                'channel_based' => true
+                'channel_based' => true,
+                'locale_based'  => true,
             ], [
                 'name'          => 'controls',
-                'title'         => 'Controls',
+                'title'         => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.controls.title',
                 'type'          => 'select',
                 'options'       => [
                     [
-                        'title' => 'Yes',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.controls.yes',
                         'value' => 'Yes',
                     ], [
-                        'title' => 'No',
+                        'title' => 'image-gallery::app.admin.configuration.image-gallery.setting.image-options.controls.no',
                         'value' => 'No',
                     ],
                 ],
-                'channel_based' => true
+                'channel_based' => true,
+                'locale_based'  => true,
             ],
         ],
     ],

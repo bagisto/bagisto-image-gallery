@@ -2,34 +2,19 @@
 
 namespace Webkul\ImageGallery\DataGrids;
 
-use Webkul\Core\Models\Locale;
-use Webkul\Ui\DataGrid\DataGrid;
 use Illuminate\Support\Facades\DB;
-use Webkul\Core\Models\Channel;
+use Webkul\DataGrid\DataGrid;
 
 class ManageGalleryDataGrid extends DataGrid
 {
-    protected $sortOrder = 'desc';
-
-    protected $index = 'id';
-
-    protected $itemsPerPage = 10;
-
-    public function __construct()
-    {
-        parent::__construct();
-
-    }
-
+    /**
+    * Prepare query builder.
+    *
+    * @return \Illuminate\Database\Query\Builder
+    */
     public function prepareQueryBuilder()
     {
-        
-
-        /* query builder */
         $queryBuilder = DB::table('manage_galleries');
-
-
-
 
         $this->addFilter('id', 'manage_galleries.id');
         $this->addFilter('gallery_title', 'manage_galleries.gallery_title');
@@ -38,94 +23,149 @@ class ManageGalleryDataGrid extends DataGrid
         $this->addFilter('thumbnail_image_id', 'manage_galleries.thumbnail_image_id');
         $this->addFilter('status', 'manage_galleries.status');
 
-        $this->setQueryBuilder($queryBuilder);
+        return $queryBuilder;
     }
-
-    public function addColumns()
+    
+    /**
+     * Prepare Columns.
+     * 
+     * @return void
+     */
+    public function prepareColumns()
     {
         $this->addColumn([
             'index'      => 'id',
-            'label'      => trans('imagegallery::app.datagrid.manage_gallery.id'),
-            'type'       => 'number',
-            'searchable' => true,
+            'label'      => trans('image-gallery::app.admin.image-gallery.datagrid.id'),
+            'type'       => 'integer',
+            'searchable' => false,
             'sortable'   => true,
             'filterable' => true,
         ]);
 
         $this->addColumn([
             'index'      => 'gallery_title',
-            'label'      => trans('imagegallery::app.datagrid.manage_gallery.gallery_title'),
+            'label'      => trans('image-gallery::app.admin.image-gallery.datagrid.gallery-title'),
             'type'       => 'string',
             'sortable'   => false,
             'searchable' => true,
-            'filterable' => false,
+            'filterable' => true,
         ]);
 
         $this->addColumn([
             'index'      => 'gallery_code',
-            'label'      => trans('imagegallery::app.datagrid.manage_gallery.gallery_code'),
+            'label'      => trans('image-gallery::app.admin.image-gallery.datagrid.gallery-code'),
             'type'       => 'string',
             'sortable'   => false,
             'searchable' => true,
-            'filterable' => false,
+            'filterable' => true,
         ]);
 
         $this->addColumn([
             'index'      => 'image_ids',
-            'label'      => trans('imagegallery::app.datagrid.manage_gallery.image_ids'),
+            'label'      => trans('image-gallery::app.admin.image-gallery.datagrid.image-ids'),
             'type'       => 'string',
             'sortable'   => false,
             'searchable' => true,
-            'filterable' => false,
+            'filterable' => true,
         ]);
 
         $this->addColumn([
             'index'      => 'thumbnail_image_id',
-            'label'      => trans('imagegallery::app.datagrid.manage_gallery.thumbnail_image_id'),
-            'type'       => 'number',
+            'label'      => trans('image-gallery::app.admin.image-gallery.datagrid.thumbnail-image-id'),
+            'type'       => 'string',
             'sortable'   => false,
             'searchable' => true,
-            'filterable' => false,
+            'filterable' => true,
+            'closure'    => function ($row) {
+                if ($row->thumbnail_image_id) {
+                    return $row->thumbnail_image_id;
+                } 
+
+                return  ''; 
+            },
         ]);
 
         $this->addColumn([
-            'index'      => 'status',
-            'label'      => trans('imagegallery::app.datagrid.manage_gallery.status'),
-            'type'       => 'boolean',
-            'sortable'   => true,
-            'searchable' => false,
-            'filterable' => true,
-            'wrapper'    => function ($value) {
-                if ($value->status == 1) {
-                    return trans('imagegallery::app.datagrid.manage_gallery.enable');
-                } else {
-                    return trans('imagegallery::app.datagrid.manage_gallery.disable');
-                }
+            'index'              => 'status',
+            'label'              => trans('image-gallery::app.admin.image-gallery.datagrid.status'),
+            'type'               => 'string',
+            'sortable'           => true,
+            'searchable'         => false,
+            'filterable'         => true,
+            'filterable_type'    => 'dropdown',
+            'filterable_options' => [
+                [
+                    'label' => trans('image-gallery::app.admin.image-gallery.datagrid.enable'),
+                    'value' => 1,
+                ], [
+                    'label' => trans('image-gallery::app.admin.image-gallery.datagrid.disable'),
+                    'value' => 0,
+                ],
+            ],
+            'closure'            => function ($row) {
+                if ($row->status) {
+                    return '<p class="label-active">' .trans('image-gallery::app.admin.image-gallery.datagrid.enable') . '</p>';
+                } 
+
+                return  '<p class="label-info">' .trans('image-gallery::app.admin.image-gallery.datagrid.disable') . '</p>'; 
+            },
+        ]);
+    }
+   
+    /**
+     * Prepare Actions.
+     * 
+     * @return void
+     */
+    public function prepareActions()
+    {
+        $this->addAction([
+            'title'  => 'image-gallery::app.admin.image-gallery.datagrid.edit',
+            'method' => 'GET',
+            'icon'   => 'icon-edit',
+            'url'    => function($row) {
+                return route('admin.image-gallery.manage-gallery.edit', $row->id);
+            },
+        ]);
+
+        $this->addAction([
+            'title'  => 'image-gallery::app.admin.image-gallery.datagrid.delete',
+            'method' => 'POST',
+            'icon'   => 'icon-delete',
+            'url'    => function ($row) {
+                return route('admin.image-gallery.manage-gallery.delete', $row->id);
             },
         ]);
     }
 
-    public function prepareActions()
-    {
-        $this->addAction([
-            'title'     => 'Edit',
-            'method'    => 'GET',
-            'route'     => 'imagegallery.admin.managegallery.edit',
-            'icon'      => 'icon pencil-lg-icon',
-        ]);
-
-        $this->addAction([
-            'title'        => 'Delete',
-            'method'       => 'POST',
-            'route'        => 'imagegallery.admin.managegallery.delete',
-            'confirm_text' => 'Do you really want to delete it....',
-            'icon'         => 'icon trash-icon',
-        ]);   
-    }
-
+    /**
+     * Prepare Mass Actions.
+     * 
+     * @return void
+     */
     public function prepareMassActions()
     {
-        
+        $this->addMassAction([
+            'title'  => trans('image-gallery::app.admin.image-gallery.datagrid.delete'),
+            'method' => 'POST',
+            'url'    => route('admin.image-gallery.manage-gallery.mass-delete'),
+            'icon'   => 'icon-delete',
+        ]);   
+
+        $this->addMassAction([
+            'title'   => trans('image-gallery::app.admin.image-gallery.datagrid.update'),
+            'method'  => 'POST',
+            'url'     => route('admin.image-gallery.manage-gallery.mass-update'),
+            'icon'    => 'icon-edit',
+            'options' => [
+                [
+                    'label' => trans('image-gallery::app.admin.image-gallery.datagrid.enable'),
+                    'value' => 1,
+                ], [
+                    'label' => trans('image-gallery::app.admin.image-gallery.datagrid.disable'),
+                    'value' => 0,
+                ],
+            ],
+        ]);
     }
-   
 }

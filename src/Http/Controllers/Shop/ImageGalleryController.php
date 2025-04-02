@@ -2,37 +2,28 @@
 
 namespace Webkul\ImageGallery\Http\Controllers\Shop;
 
-use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
 use Webkul\ImageGallery\Repositories\ImageGalleryRepository;
 use Webkul\ImageGallery\Repositories\ManageGalleryRepository;
 use Webkul\ImageGallery\Repositories\ManageGroupRepository;
 
 class ImageGalleryController extends Controller
-{
-
+{  
     /**
-     * Contains route related configuration
-     *
-     * @var array
+     * @var int
      */
-    protected $_config;
-    protected $imageGalleryRepository;
+    public const ACTIVE = 1;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
     public function __construct(
-        ImageGalleryRepository $imageGalleryRepository,
-        ManageGalleryRepository $manageGalleryRepository,
-        ManageGroupRepository $manageGroupRepository
-    )
-    {
-        $this->imageGalleryRepository = $imageGalleryRepository;
-        $this->manageGalleryRepository = $manageGalleryRepository;
-        $this->manageGroupRepository = $manageGroupRepository;
-
-        $this->_config = request('_config');
+        protected ImageGalleryRepository $imageGalleryRepository,
+        protected ManageGalleryRepository $manageGalleryRepository,
+        protected ManageGroupRepository $manageGroupRepository,
+    ) {
     }
 
     /**
@@ -40,46 +31,53 @@ class ImageGalleryController extends Controller
      *
      * @return \Illuminate\View\View
      */
-   
-
-
     public function index()
     {
+        $manageGalleries = $this->manageGalleryRepository->findWhere([
+            'status' => self::ACTIVE,
+        ]);        
         
-        $managegalleries = $this->manageGalleryRepository->getCategoryTreeForShop();        
-        
-        foreach ($managegalleries as $key => $managegallery) {
-            if (!isset($managegallery->image_ids))
-            {
-                session()->flash('info', 'Sorry! No images found.');
+        foreach ($manageGalleries as $key => $manageGallery) {
+            if (
+                ! $manageGallery->image_ids
+                && ! $manageGallery->thumbnail_image_id
+            ) {
+                unset($manageGalleries[$key]);
+            }
 
-                return redirect()->back();
-            }
-            if($managegallery->image_ids[0] == 0 && $managegallery->thumbnail_image_id == null)
-            {
-                unset($managegalleries[$key]);
-            }
-            $managegallery['image_name']= $this->imageGalleryRepository->getCategoryTreeForShop($managegallery->image_ids,$managegallery->thumbnail_image_id);
-            // if(($managegallery->image_name)->isEmpty())
-            // {
-            //     unset($managegalleries[$key]);
-            // }
-            
+            $manageGallery->image_ids = explode(',', $manageGallery->image_ids);
+
+            $manageGallery['image_name']= $this->imageGalleryRepository->getCategoryTreeForShop($manageGallery->image_ids, $manageGallery->thumbnail_image_id);
         }
         
-        return view($this->_config['view'], compact('managegalleries'));
+        return view('image-gallery::shop.index')->with('manageGalleries', $manageGalleries);
     }
-
-    public function indeximage($id)
+    
+    /**
+     * Get Index Images.
+     * 
+     * @return \Illuminate\view\view
+     */
+    public function indexImage($id)
     {
-        
         $categories = $this->manageGalleryRepository->getCategoryTreeForShopImage($id);
-        foreach ($categories as $key => $category) {
-            $category->image_name = $this->imageGalleryRepository->getCategoryTreeForShop($category->image_ids);
+         
+        $images = [];
+
+        foreach ($categories as $category) {
+            $images = $this->imageGalleryRepository->getCategoryTreeForShop($category->image_ids);
         }
-        
-        
-        return view($this->_config['view'], compact('categories'));
-        // return response()->json($categories);
+
+        foreach ($images as $image) {
+            $image->image =  asset('storage/' .$image->image);
+        }
+
+        $gallery = $this->manageGalleryRepository->find($id);
+
+        if (empty($gallery->status)) {
+            return redirect('/');
+        }
+
+        return view('image-gallery::shop.image', compact('gallery', 'images'));
     }
 }
